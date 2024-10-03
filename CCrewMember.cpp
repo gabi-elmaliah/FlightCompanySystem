@@ -5,7 +5,7 @@
 
 using namespace std;
 
-CCrewMember::CCrewMember(string name,int airTimeMinutes, const  CAddress& address):name(name)
+CCrewMember::CCrewMember(string name,int airTimeMinutes):name(name)
 {
 	if (airTimeMinutes < 0)
 		this->airTimeMinutes = 0;
@@ -15,7 +15,7 @@ CCrewMember::CCrewMember(string name,int airTimeMinutes, const  CAddress& addres
 
 CCrewMember::~CCrewMember() {}
 
-CCrewMember::CCrewMember(const CCrewMember& other): name(other.name), address(other.address), 
+CCrewMember::CCrewMember(const CCrewMember& other): name(other.name), 
 airTimeMinutes(other.airTimeMinutes)
 {
 
@@ -33,10 +33,7 @@ bool CCrewMember::UpdateMinutes(int minutes)
 
 string CCrewMember::getName()const { return name;}
 
-const CAddress& CCrewMember::getAddress() const 
-{ 
-	return address;
-}
+
 
 int CCrewMember::getAirTimeMinutes()const
 {
@@ -50,15 +47,8 @@ void CCrewMember::setName(string name)
 {
 	this->name = name;
 }
-void CCrewMember::setAddress(const CAddress &address)
-{
-	this->address.UpdateAddress(address.getcityName(), address.getStreetName(), address.getHouseNumber());
-}
 
-void CCrewMember::Print()const
-{
-	cout << "Crewmember " << name << " minutes " << airTimeMinutes << endl;
-}
+
 
 bool CCrewMember::IsEqual(CCrewMember& other)const
 {
@@ -69,10 +59,8 @@ const CCrewMember& CCrewMember::operator=(const CCrewMember& other)
 {
 	if (this != &other)
 	{
-		id = other.id;
 		name = other.name;
 		airTimeMinutes = other.airTimeMinutes;
-		address = other.address;
 	}
 
 	return *this;
@@ -101,10 +89,8 @@ const CCrewMember* CCrewMember::operator+=(int minutes)
 	return this;
 }
 
-void CCrewMember::recieveGift() const
-{
-	cout<<name  <<"thanking the company for receiving the holiday gift. I wasnt expecting it"<<endl;
-}
+
+
 
 
 

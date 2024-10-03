@@ -82,7 +82,7 @@ bool CFlightInfo::isEqual(const CFlightInfo& other) const
 
 void CFlightInfo::Print() const
 {
-	cout << "Flight Info destination: " <<destination 
+	cout << "Flight Fligh Info dest: " <<destination 
 		<< " Number: " << flightNumber << 
 		" minutes " << flightTimeMinutes 
 		<<" KM "<<flightDistance << endl;
@@ -91,7 +91,7 @@ void CFlightInfo::Print() const
 
 ostream& operator<<(ostream& os, const CFlightInfo& p)
 {
-	os << "Flight Info destination: " << p.destination
+	os << "Flight Fligh Info dest: " << p.destination
 		<< " Number: " << p.flightNumber <<
 		" minutes " << p.flightTimeMinutes
 		<< " KM " << p.flightDistance << endl;

@@ -3,7 +3,7 @@
 using namespace std;
 class CPlane
 {
-private:
+protected:
 	static int counter;
 	string name;
 	int numOfSeats;
@@ -13,7 +13,7 @@ public:
 	
 	CPlane(int numOfSeats, const string& name);
 	CPlane(const CPlane& other);
-	~CPlane();
+	virtual ~CPlane();
 	int getSerialNumber() const;
 	string getName() const;
 	int getNumOfSeats()const;
@@ -21,11 +21,12 @@ public:
 	bool IsEqual(const CPlane& other)const;
 
 	friend ostream& operator<<(ostream& os, const CPlane& p);
+	virtual void toOs(ostream& os) const {};
 	bool operator==(const CPlane& p) const;
-	const CPlane& operator=(const CPlane& other);
+	virtual const CPlane& operator=(const CPlane& other);
+	virtual CPlane* clone() const { return new CPlane(*this); };
 	const CPlane& operator++();//prefix ++x
 	CPlane operator++(int); //postfix x++
-
 
 
 };

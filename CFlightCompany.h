@@ -3,6 +3,8 @@
 #include "CCrewMember.h"
 #include "CPlane.h"
 #include "CFlight.h"
+#include "CPilot.h"
+
 using namespace std;
 class CFlightCompany
 {
@@ -27,7 +29,7 @@ public:
 
 	CFlightCompany(string name);
 	CFlightCompany(CFlightCompany& other);
-	~CFlightCompany();
+	virtual ~CFlightCompany();
 
 
 	string getCompanyName()const;
@@ -41,10 +43,13 @@ public:
 
 	friend ostream& operator<<(ostream& os, const CFlightCompany& p);
 	const CFlightCompany& operator=(const CFlightCompany& p);
+	CFlight* GetFlightByNum(int flightNum) const;
+	CCrewMember* GetCrewMember(int index) const;
+	int  GetCargoCount()const ;
+	void PilotsToSimulator() const;
+	void CrewGetPresent()const;
+	void CrewGetUniform()const;
 
-private:
-	CFlight* getFlight(int crewMemberNum) const;
-	CCrewMember* getCrewMember(int crewMemberNum)const;
 
 
 

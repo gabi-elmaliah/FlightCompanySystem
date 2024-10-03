@@ -37,6 +37,7 @@ CFlightCompany::~CFlightCompany()
 		crewMembers[i] = nullptr;
 	}
 
+
 	for (int i = 0; i <numOfFlights; i++)
 	{
 		delete flights[i];
@@ -71,7 +72,9 @@ ostream& operator<<(ostream& os, const CFlightCompany& p)
 	os << "There are " << p.numOfCrewMembers <<" Crew members"<< endl;
 	for (int i = 0; i <p.numOfCrewMembers; i++)
 	{
-		os << *p.crewMembers[i];
+		//os << *p.crewMembers[i];
+		p.crewMembers[i]->Print(os);
+		
 	}
 	os << "There are " << p.numOfPlanes << " Planes" << endl;
 	for (int i = 0; i < p.numOfPlanes; i++)
@@ -110,14 +113,16 @@ const CFlightCompany& CFlightCompany::operator=(const CFlightCompany& p)
 			delete planes[i];
 			planes[i] = nullptr;
 		}
-
+		
 		this->numOfCrewMembers = p.numOfCrewMembers;
 		this->numOfFlights = p.numOfFlights;
 		this->numOfPlanes = p.numOfPlanes;
 
 		for (int i = 0; i < this->numOfCrewMembers; i++)
 		{
-			crewMembers[i] = new CCrewMember(*p.crewMembers[i]);
+		//	crewMembers[i] = new CCrewMember(*p.crewMembers[i]);
+			crewMembers[i] =p.crewMembers[i]->clone();
+			
 		}
 
 		for (int i = 0; i < this->numOfFlights; i++)
@@ -127,7 +132,7 @@ const CFlightCompany& CFlightCompany::operator=(const CFlightCompany& p)
 
 		for (int i = 0; i < this->numOfPlanes; i++)
 		{
-			planes[i] = new CPlane(*p.planes[i]);
+			planes[i] = p.planes[i]->clone();
 		}
 	}
 
@@ -147,7 +152,8 @@ bool CFlightCompany::AddCrewMember(const CCrewMember& p)
 			return false;
 	}
 
-	crewMembers[numOfCrewMembers] = new CCrewMember(p);
+	//crewMembers[numOfCrewMembers] = new CCrewMember(p);
+	crewMembers[numOfCrewMembers] = p.clone();
 	numOfCrewMembers++;
 	return true;
 
@@ -164,7 +170,9 @@ bool CFlightCompany::AddPlane(const CPlane& p)
 		if (*planes[i] == p)
 			return false;
 	}
-	planes[numOfPlanes] = new CPlane(p);
+
+	//planes[numOfPlanes] = new CPlane(p);
+	planes[numOfPlanes] = p.clone();
 	numOfPlanes++;
 	return true;
 }
@@ -180,28 +188,21 @@ bool CFlightCompany::AddFlight(const CFlight& p)
 		if (*flights[i] == p)
 			return false;
 	}
-	CPlane plane = p.getFlightPlane();
-	flights[numOfFlights] = new CFlight(p.getFlightInfo(),&plane);
+
+	flights[numOfFlights] = new CFlight(p.GetFlightInfo(),p.plane); // CFlightCompany is a frind of CFLight
 	numOfFlights++;
 	return true;
 }
 
 
-CCrewMember* CFlightCompany::getCrewMember(int crewMemberNum) const
+CCrewMember* CFlightCompany::GetCrewMember(int index) const
 {
-	for (int i = 0; i < numOfCrewMembers; i++)
-	{
 
-		if (crewMembers[i]->getCrewMemberId()==crewMemberNum)
-			return crewMembers[i];
-	}
-
-	return nullptr;
-
+	return crewMembers[index];
 
 }
 
-CFlight* CFlightCompany::getFlight(int flightNum) const
+CFlight* CFlightCompany::GetFlightByNum(int flightNum) const
 {
 
 	for (int i = 0; i < numOfCrewMembers; i++)
@@ -216,17 +217,18 @@ CFlight* CFlightCompany::getFlight(int flightNum) const
 }
 
 
-void  CFlightCompany::AddCrewToFlight(int flightNumber, int crewMemberId)
+void  CFlightCompany::AddCrewToFlight(int flightNumber, int index)
 {
 	
-	CFlight* flight = this->getFlight(flightNumber);
-	CCrewMember* crewMember = this->getCrewMember(crewMemberId);
+	CFlight* flight = const_cast<CFlight*>(this->GetFlightByNum(flightNumber));
+	CCrewMember* crewMember =const_cast<CCrewMember*>(this->GetCrewMember(index));
 	if (flight == nullptr)
 		return;
 	if (crewMember == nullptr)
 		return;
 
-	flight = *flight + *crewMember;
+	flight = *flight + crewMember;
+	
 	
 }
 
@@ -237,6 +239,51 @@ const CPlane* CFlightCompany::GetPlane(int i) const
 
 	return planes[i];
 }
+
+int  CFlightCompany::GetCargoCount()const
+{
+	int sum = 0;
+
+	for (int i = 0; i < numOfPlanes; i++)
+	{
+		CCargo* temp = dynamic_cast<CCargo*>(planes[i]);
+		if (temp)
+			sum += 1;
+	}
+
+	return sum;
+}
+
+
+void CFlightCompany::PilotsToSimulator() const
+{
+	for (int i = 0; i < numOfCrewMembers; i++)
+	{
+		CPilot* temp = dynamic_cast<CPilot*>(crewMembers[i]);
+		if (temp)
+			temp->comeToSimulatorMessage();
+	}
+
+}
+
+void CFlightCompany::CrewGetPresent()const
+{
+	for (int i = 0; i < numOfCrewMembers; i++)
+	{
+		crewMembers[i]->recieveGift();
+	}
+
+}
+
+void CFlightCompany::CrewGetUniform()const
+{
+	for (int i = 0; i < numOfCrewMembers; i++)
+	{
+		crewMembers[i]->switchUniform();
+	}
+	
+}
+
 
 
 

@@ -15,6 +15,7 @@ CPlane::CPlane(int numOfSeats, const string& name):name(name),serial_number(coun
 }
 
 
+
 CPlane::CPlane(const CPlane& other)
 {
 	*this = other;
@@ -51,6 +52,7 @@ bool CPlane::IsEqual(const CPlane& other) const
 ostream& operator<<(ostream& os, const CPlane& p)
 {
 	os << "Plane " << p.serial_number << " degem " << p.name << " seats " << p.numOfSeats << endl;
+	p.toOs(os);
 	return os;
 }
 
