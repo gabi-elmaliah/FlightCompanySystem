@@ -1,4 +1,5 @@
 #include "CPilot.h"
+#include "CAddress.h"
 
 
 CPilot::CPilot(string name,bool isCaptain ,const CAddress* address, int airTimeMinutes):CCrewMember(name,airTimeMinutes),
@@ -9,6 +10,11 @@ isCaptain(isCaptain)
 	else
 		this->address = new CAddress(*address);
 
+}
+
+CPilot::CPilot(ifstream& in):CCrewMember(in)
+{
+	fromOs(in);
 }
 
 CPilot::~CPilot()
@@ -22,6 +28,22 @@ CPilot::CPilot(const CPilot& other):CCrewMember(other)
 	*this = other;
 }
 
+void CPilot::fromOs(istream& in)
+{
+	int hasAddress;
+	in >> hasAddress;
+	if (hasAddress == 1)
+	{
+		this->address = new CAddress(in);
+	}
+	int isCaptain;
+	in >> isCaptain;
+	if (isCaptain)
+		isCaptain = true;
+	else
+		isCaptain = false;
+	
+}
 const CPilot& CPilot::operator=(const CPilot& p)
 {
 	if (this == &p)
@@ -50,15 +72,22 @@ bool CPilot::operator==(const CCrewMember& other) const
 	if (!CCrewMember::operator==(other))
 		return false;
 
+	// Use dynamic_cast to check if 'other' is a CPilot
 	const CPilot* temp = dynamic_cast<const CPilot*>(&other);
 
-	if (temp == NULL)
+	if (temp == nullptr)
 		return false;
-	if (this->address == nullptr && temp->address == nullptr) //if both are null we use only the base operator which returns true 
+
+	// If both addresses are nullptr, they are considered equal
+	if (this->address == nullptr && temp->address == nullptr)
 		return true;
 
-	return *this->address == *temp->address;
+	// If one is nullptr and the other is not, they are not equal
+	if (this->address == nullptr || temp->address == nullptr)
+		return false;
 
+	// Dereference and compare the addresses
+	return *this->address == *temp->address;
 }
 
 
@@ -89,6 +118,20 @@ void CPilot::Print(std::ostream& os) const
 		cout <<"Pilot " << name << " minutes " << airTimeMinutes << " Home " << *address << pilotPosition << endl;
 	else
 		cout <<"Pilot " << name << " minutes " << airTimeMinutes<< pilotPosition << endl;
+
+}
+
+void CPilot::toOs(ostream& os) const
+{
+	if (typeid(os) == typeid(ofstream))
+	{
+		if (address != nullptr)
+			os << 1 << " " << *address<<" ";
+		os << isCaptain<<endl;
+	}
+	else
+		Print(os);
+	
 
 }
 

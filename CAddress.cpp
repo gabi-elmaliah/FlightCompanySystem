@@ -1,5 +1,7 @@
 #include "CAddress.h"
 #include <string>
+#include <iostream>
+#include "FlightCompException.h"
 using namespace std;
 
 
@@ -39,6 +41,21 @@ CAddress::~CAddress()
 	streetName = nullptr;
 }
 
+CAddress::CAddress(istream& in)
+{
+	in >> houseNumber;
+
+	// Step 2: Create temporary strings to store street name and city name
+	std::string tempStreetName, tempCityName;
+
+	// Step 3: Read the street name and city name
+	in >> tempStreetName >> tempCityName;
+
+	// Step 4: Allocate memory and copy the data to the class members
+	streetName = _strdup(tempStreetName.c_str());
+	cityName = _strdup(tempCityName.c_str());	
+}
+
 const char* CAddress::getcityName() const
 {
 	return cityName;
@@ -54,9 +71,10 @@ int CAddress::getHouseNumber()const
 
 
 
-void CAddress::UpdateAddress(const char* cityName, const char* streetName,int houseNumber)
+void CAddress::UpdateAddress(const char* cityName, const char* streetName,int houseNumber) noexcept(false)
 {
 	if (cityName == nullptr || streetName == nullptr)
+		throw CCompStringException("error in update address: city name and street name cant be null");
 		return;
 
 	if (houseNumber < 0)
@@ -74,9 +92,14 @@ void CAddress::UpdateAddress(const char* cityName, const char* streetName,int ho
 
 ostream& operator<<(ostream& os, const CAddress& p)
 {
-
+	if (typeid(os) == typeid(ofstream))
+	{
+		os <<p.houseNumber<<"  "<<p.streetName<<" "<<p.cityName<< endl;
+	}
+	else
 	 os <<p.streetName << " " << p.houseNumber << ", " << p.cityName << endl;
-	 return os;
+	
+	return os;
 
 }
 

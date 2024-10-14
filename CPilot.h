@@ -1,5 +1,7 @@
 #pragma once
 #include "CCrewMember.h"
+#include "CAddress.h"
+#include <fstream>
 class CPilot: public CCrewMember
 {
 
@@ -12,9 +14,12 @@ public:
 
 	CPilot(string name, bool isCaptain, const CAddress* address =nullptr, int airTimeMinutes = 0);
 	CPilot(const CPilot& other);
+	CPilot(ifstream& in);
 	~CPilot();
 
 	virtual void Print(std::ostream& os)const override;
+	virtual void fromOs(istream& in) override;
+	virtual void toOs(ostream& os) const override;
 	virtual void switchUniform() const override;
 	virtual void recieveGift() const override;
 	void comeToSimulatorMessage();

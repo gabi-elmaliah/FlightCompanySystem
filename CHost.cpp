@@ -17,6 +17,29 @@ CHost::CHost(const CHost& other):CCrewMember(other)
 	*this = other;
 }
 
+CHost::CHost(ifstream& in) :CCrewMember(in)
+{
+	fromOs(in);
+}
+
+void CHost::fromOs(istream& in) 
+{
+	int typeNumber;
+	in >> typeNumber;
+	type = static_cast<eType>(typeNumber);
+}
+
+void CHost::toOs(ostream& os)const
+{
+	if (typeid(os) == typeid(ofstream))
+	{
+		os << type << endl;
+	}
+	else
+		Print(os);
+}
+
+
 const CHost& CHost::operator=(const CHost& p)
 {
 	if (this == &p)
@@ -33,7 +56,7 @@ void CHost::switchUniform() const
 
 void CHost::recieveGift() const
 {
-	cout<< name << " thanking the company for receiving the holiday gift.I wasn’t expecting it"<<endl;
+	cout<< name << " thanking the company for receiving the holiday gift. I wasn’t expecting it"<<endl;
 }
 
 bool CHost::operator==(const CHost& other) const

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include<iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -16,7 +17,8 @@ private:
 public :
 
 	//constructors
-	CFlightInfo(const  string& destination,int flightNumber, int flightTimeMinutes, int flightDistance);
+	CFlightInfo(const  string& destination,int flightNumber, int flightTimeMinutes, int flightDistance) noexcept(false);
+	CFlightInfo(ifstream& in);
 	~CFlightInfo();
 	CFlightInfo(const CFlightInfo & other);
 
@@ -27,10 +29,10 @@ public :
 	int getFlightDistance() const;
 
 	//setterts
-	void setFlightNumber(int flightNumber);
-	void SetDest(string destination);
-	void setFlightTimeMinutes(int minutes);
-	void setFlightDistance(int distance);
+	void setFlightNumber(int flightNumber)noexcept(false);
+	void SetDest(string destination)noexcept(false);
+	void setFlightTimeMinutes(int minutes)noexcept(false);
+	void setFlightDistance(int distance)noexcept(false);
 
 	bool isEqual(const CFlightInfo& fligthInfo) const;
 	void Print()const;

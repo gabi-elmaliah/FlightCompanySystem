@@ -2,10 +2,13 @@
 #include <string>
 #include "CCrewMember.h"
 #include "CPlane.h"
-#include "CFlight.h"
+
 #include "CPilot.h"
+#include <fstream>
 
 using namespace std;
+
+class CFlight;
 class CFlightCompany
 {
 public:
@@ -28,6 +31,7 @@ private :
 public:
 
 	CFlightCompany(string name);
+	CFlightCompany(string name,int)noexcept(false);
 	CFlightCompany(CFlightCompany& other);
 	virtual ~CFlightCompany();
 
@@ -37,21 +41,26 @@ public:
 	bool AddCrewMember(const CCrewMember& p);
 	bool AddPlane(const CPlane& p);
 	bool AddFlight(const CFlight& p);
+
 	void  AddCrewToFlight(int flightNumber, int crewMemberId);
-	const CPlane* GetPlane(int i)const ;
-	void Print(std::ostream& os)const;
+	void Print(std::ostream& os)const noexcept(false);
 
 	friend ostream& operator<<(ostream& os, const CFlightCompany& p);
 	const CFlightCompany& operator=(const CFlightCompany& p);
-	CFlight* GetFlightByNum(int flightNum) const;
+	const CPlane& operator[](int index) const noexcept(false);
+	CPlane& operator[](int index) noexcept(false);
+
+
+
+	CFlight* GetFlightByNum(int flightNum) const noexcept(false);
+	const CPlane* getPlaneById(int planeNumber) const noexcept(false);
 	CCrewMember* GetCrewMember(int index) const;
 	int  GetCargoCount()const ;
-	void PilotsToSimulator() const;
+	void PilotsToSimulator() const ;
 	void CrewGetPresent()const;
 	void CrewGetUniform()const;
-
-
-
+	bool TakeOff(int flightNumber) noexcept(false);
+	void SaveToFile(string fileName) const ;
 
 };
 

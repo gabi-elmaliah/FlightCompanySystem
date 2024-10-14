@@ -1,14 +1,15 @@
 #include <iostream>
 #include <string>
 #include "CPlane.h"
+#include "FlightCompException.h"
 using namespace std;
 
 int CPlane::counter = 100;
 
-CPlane::CPlane(int numOfSeats, const string& name):name(name),serial_number(counter++)
+CPlane::CPlane(int numOfSeats, const string& name) noexcept(false) :name(name), serial_number(counter++) 
 {
 	if (numOfSeats <= 0)
-		this->numOfSeats = 1;
+		throw CCompStringException("error in CPlane: number of seats must be positive");
 	else
 		this->numOfSeats = numOfSeats;
 
@@ -19,6 +20,13 @@ CPlane::CPlane(int numOfSeats, const string& name):name(name),serial_number(coun
 CPlane::CPlane(const CPlane& other)
 {
 	*this = other;
+}
+
+CPlane::CPlane(ifstream &in)
+{
+	int lastId;
+	in >> lastId>>serial_number>>name>>numOfSeats;
+	
 }
 CPlane::~CPlane()
 {
@@ -51,8 +59,12 @@ bool CPlane::IsEqual(const CPlane& other) const
 
 ostream& operator<<(ostream& os, const CPlane& p)
 {
-	os << "Plane " << p.serial_number << " degem " << p.name << " seats " << p.numOfSeats << endl;
-	p.toOs(os);
+	if (typeid(os) == typeid(ofstream))
+	{
+		p.toOs(os);
+	}
+	else
+		os << "Plane " << p.serial_number << " degem " << p.name << " seats " << p.numOfSeats << endl;
 	return os;
 }
 

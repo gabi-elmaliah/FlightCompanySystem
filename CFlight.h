@@ -6,7 +6,10 @@
 #include "CCargo.h"
 #include "CPilot.h"
 #include "CHost.h"
+#include <fstream>
 
+
+class CFlightCompany;
 
 class CFlight
 {
@@ -20,21 +23,31 @@ private:
 	CCrewMember* crewMembers[MAX_CREW];
 	int numOfCrewMembers;
 
-public:
-	CFlight(const CFlightInfo& flightInfo,const  CPlane* plane=nullptr);
 
+
+public:
+
+	//construcotrs
+	CFlight(const CFlightInfo& flightInfo,const  CPlane* plane=nullptr);
 	CFlight(const CFlight & other);
+	CFlight(ifstream& in,CFlightCompany& flightcompany) noexcept(false);
 	virtual ~CFlight();
+
+	//getters
 	int getNumOfCrewMembers()const;
 	int getFlightNumber()const ;
 	const CPlane& getFlightPlane()const;
 	const CFlightInfo& GetFlightInfo()const;
+
 	void SetPlane(const CPlane* plane);
+
+	// operators
 	friend ostream& operator<<(ostream& os, const CFlight& p);
 	const CFlight& operator=(const CFlight& p);
 	bool operator==(const CFlight& p) const;
 	CFlight* operator+(const CCrewMember* other);
-	bool TakeOff();
+
+	bool TakeOff()  noexcept(false);
 	int countPilots()const ;
 	int countSuperHost()const ;
 

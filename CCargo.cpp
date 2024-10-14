@@ -1,18 +1,18 @@
 #include "CCargo.h"
+#include "FlightCompException.h"
 
-
-CCargo::CCargo(int seats, string name, float maxWeight, float maxVolume) :CPlane(seats,name)
+CCargo::CCargo(int seats, string name, float maxWeight, float maxVolume) noexcept(false) :CPlane(seats, name)
 {
 	if (maxWeight < 0)
 	{
-		this->maxWeight = 0;
+		throw CCompStringException("error in CCargo C'tor: max weight should be greater than zero\n");
 	}
 	else
 		this->maxWeight = maxWeight;
 
 	if (maxVolume < 0)
 	{
-		this->maxVolume = 0;
+		throw CCompStringException("error in CCargo C'tor: max volume should be greater than zero\n");
 	}
 	else
 		this->maxVolume = maxVolume;
@@ -39,8 +39,16 @@ const CCargo& CCargo::operator=(const CCargo& p)
 	return *this;
 }
 
+CCargo::CCargo(ifstream& in):CPlane(in)
+{
+	in >> maxVolume >> maxWeight >> currentVolume >> currentWeight;
+}
+
 bool CCargo::Load(float weight, float volume)
 {
+	if (weight <= 0 || volume <= 0)
+		throw CCompStringException("error in load function: weight and voume must be poritive");
+
 	if (currentVolume + volume > maxVolume)
 		return false;
 	if (currentWeight + weight > maxWeight)
@@ -53,7 +61,15 @@ bool CCargo::Load(float weight, float volume)
 
 void CCargo::toOs(ostream& os) const
 {
-	os << "Cargo M_vol " << maxVolume << "M_Kg " << maxWeight << "C_vol "<<currentVolume << "C_Kg" << currentWeight << endl;
+	if (typeid(os) == typeid(ofstream))
+	{
+		os << serial_number << " " << name << " " << numOfSeats << endl;
+		os << maxVolume << "   " << maxWeight << "  " << currentVolume << " " << currentWeight << endl;
+	}
+	else
+	{
+		os << "Cargo M_vol " << maxVolume << "M_Kg " << maxWeight << "C_vol " << currentVolume << "C_Kg" << currentWeight << endl;
+	}
 }
 
 
