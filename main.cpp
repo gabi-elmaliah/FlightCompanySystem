@@ -36,32 +36,96 @@ void main()
 		e.Show();
 		pDelta = new CFlightCompany("Delta");
 	}
+	
 
 	//Checking some of the exception put try and catch for each section	
+	try
+	{
+		CPlane p1(-34, "AirBus");
+	}
+	catch (const CFlightCompException& e) {
+		e.Show();
+	}
+	try
+	{
+		CCargo c1(45, "Jumbo", -560, 200);
+	}
 
-	CPlane p1(-34, "AirBus");
-	CCargo c1(45, "Jumbo", -560, 200);
-	CCargo c2(45, "Jumbo", 560, -200);
-	CFlightInfo f1("London", -23, 120, 5000);
-	CFlightInfo f2("LondonVeryLong", 23, 120, 5000);
-	CFlightInfo f3("London", 23, -120, 5000);
-	CFlightInfo f4("London", 23, 120, -5000);
-	CCrewMember* pC1 = pDelta->GetCrewMember(-1);
+	catch (const CFlightCompException& e) {
+		e.Show();
+	}
+	cout << "3.counter is: " << CPlane::getCounter() << endl;
+
+	try
+	{
+		CCargo c2(45, "Jumbo", 560, -200);
+	}
+	catch (const CFlightCompException& e) {
+		e.Show();
+	}
+
+
+	try
+	{
+		CFlightInfo f1("London", -23, 120, 5000);
+	}
+	catch (const CFlightCompException& e) {
+		e.Show();
+	}
+
+	try
+	{
+		CFlightInfo f2("LondonVeryLong", 23, 120, 5000);
+	}
+	catch (const CFlightCompException& e) {
+		e.Show();
+	}
+
+	try
+	{
+		CFlightInfo f3("London", 23, -120, 5000);
+	}
+	catch (const CFlightCompException& e) {
+		e.Show();
+	}
+
+	try
+	{
+		CFlightInfo f4("London", 23, 120, -5000);
+	}
+	catch (const CFlightCompException& e) {
+		e.Show();
+	}
+
+	try
+	{
+		CCrewMember* pC1 = pDelta->GetCrewMember(-1);
+	}
+	catch (const CFlightCompException& e) {
+		e.Show();
+	}
 
 	CCrewMember* pC2 = pDelta->GetCrewMember(0);
-	(*pC2) += -4;
-	CPlane p0 = (*pDelta)[9];
 
+	
+	try
+	{
+		(*pC2) += -4;
+	}
+	catch (const CFlightCompException& e) {
+		e.Show();
+	}
 
+	try
+	{
+		CPlane p0 = (*pDelta)[9];
+	}
+	catch (const CFlightCompException& e) {
+		e.Show();
+	}
 
-	//call a static function that get plane or customer from user.
-
+	cout << "------------checking get company from user------------------" << endl;
 	CPlaneCrewFactory::GetCompanyDataFromUser(*pDelta);
-
-
-	CFlightInfo Info("Paris", 343, 320, 5000);
-	CFlight flight1(Info, &(*pDelta)[0]);
-	pDelta->AddFlight(flight1);
 
 
 	CFlight* pF = pDelta->GetFlightByNum(343);
@@ -69,17 +133,21 @@ void main()
 	if (pF != NULL) {
 		cout << "flight 343 was found " << endl;
 		for (int i = 0; i < pDelta->GetCrewCount(); i++) {
-			pCmTemp = pDelta->GetCrewMember(i);
-			*pF + pCmTemp;
+			try
+			{
+				pCmTemp = pDelta->GetCrewMember(i);
+				*pF + pCmTemp;  // Try adding the crew member to the flight
+			}
+			catch (CFlightCompException& ex) {
+				ex.Show();
+			}
 		}
 	}
 
 
 	try
 	{
-
 		pDelta->SaveToFile("Delta.txt");
-
 	}
 	catch (const CFlightCompException& e) {
 		e.Show();
@@ -87,10 +155,5 @@ void main()
 
 
 	delete pDelta;
-
-
-
-
-
 	system("pause");
 }

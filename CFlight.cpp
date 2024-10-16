@@ -32,7 +32,7 @@ CFlight::CFlight(ifstream& in, CFlightCompany& flightcompany) noexcept(false):
 	{
 		int planeNumber;
 		in >> planeNumber;
-		plane = const_cast<CPlane*>(flightcompany.getPlaneById(planeNumber));
+		plane = const_cast<CPlane*>(flightcompany.getPlaneById(planeNumber))->clone();
 	}
 	else
 		plane = nullptr;
@@ -81,10 +81,21 @@ ostream& operator<<(ostream& os, const CFlight& p)
 	if (typeid(os) == typeid(ofstream))
 	{
 		int hasPlane = (p.plane != nullptr) ? 1 : 0;
-		os << p.flightInfo << " " << hasPlane << endl << p.numOfCrewMembers<<endl;
+		int pNum = p.getFlightPlane().getSerialNumber();
+		os << p.flightInfo << " " << hasPlane <<" "<< pNum << endl << p.numOfCrewMembers << endl;
 		for (int i = 0; i < p.numOfCrewMembers; i++)
 		{
-			os << *p.crewMembers[i];
+			
+			if (p.crewMembers[i] != nullptr)
+			{
+				CHost* temp = dynamic_cast<CHost*>(p.crewMembers[i]);
+				if (temp)
+				{
+					os << 0 << " " << *p.crewMembers[i];
+				}
+				else
+					os << 1 << " " << *p.crewMembers[i];
+			}
 		}
 	}	
 	else
@@ -160,16 +171,16 @@ bool CFlight::operator==(const CFlight& p) const
 }
 
 
-CFlight* CFlight::operator+(const CCrewMember* other)
+CFlight* CFlight::operator+(const CCrewMember* other) noexcept(false)
 {
 	if (this->numOfCrewMembers == CFlight::MAX_CREW)
-		return nullptr ;
+		throw CCompStringException("Cant Add Crew Member to flight");
 
 	// check if crew member already in the flight
 	for (int i = 0; i < numOfCrewMembers; i++)
 	{
 		if (*this->crewMembers[i] == *other)
-			return nullptr;
+			throw CCompStringException("Cant Add Crew Member to flight. there is already a crew member with the same name");
 	}
 	
 	//this->crewMembers[numOfCrewMembers] = new CCrewMember(other);

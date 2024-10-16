@@ -39,9 +39,9 @@ void CPilot::fromOs(istream& in)
 	int isCaptain;
 	in >> isCaptain;
 	if (isCaptain)
-		isCaptain = true;
+		this->isCaptain = true;
 	else
-		isCaptain = false;
+		this->isCaptain = false;
 	
 }
 const CPilot& CPilot::operator=(const CPilot& p)
@@ -136,7 +136,7 @@ void CPilot::toOs(ostream& os) const
 }
 
 
-const CCrewMember* CPilot::operator+=(int minutes)
+const CCrewMember& CPilot::operator+=(int minutes)
 {
 	if (isCaptain)
 		return CCrewMember::operator+=(minutes + 0.1 * minutes);

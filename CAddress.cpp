@@ -94,7 +94,7 @@ ostream& operator<<(ostream& os, const CAddress& p)
 {
 	if (typeid(os) == typeid(ofstream))
 	{
-		os <<p.houseNumber<<"  "<<p.streetName<<" "<<p.cityName<< endl;
+		os <<p.houseNumber<<"  "<<p.streetName<<" "<<p.cityName;
 	}
 	else
 	 os <<p.streetName << " " << p.houseNumber << ", " << p.cityName << endl;

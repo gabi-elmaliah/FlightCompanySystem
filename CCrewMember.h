@@ -34,7 +34,7 @@ public :
 	virtual const CCrewMember& operator=(const CCrewMember& p);
 	virtual void toOs(ostream& os) const {}
 	virtual bool operator==(const CCrewMember& other) const;
-	virtual const CCrewMember* operator+=(int minutes);
+	virtual const CCrewMember& operator+=(int minutes);
 	virtual void fromOs(istream& in) {}
 	virtual void recieveGift() const=0;
 	virtual void switchUniform() const=0;

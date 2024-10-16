@@ -55,12 +55,16 @@ public:
 	CFlight* GetFlightByNum(int flightNum) const noexcept(false);
 	const CPlane* getPlaneById(int planeNumber) const noexcept(false);
 	CCrewMember* GetCrewMember(int index) const;
+	int GetCrewCount()const;
 	int  GetCargoCount()const ;
 	void PilotsToSimulator() const ;
 	void CrewGetPresent()const;
 	void CrewGetUniform()const;
 	bool TakeOff(int flightNumber) noexcept(false);
 	void SaveToFile(string fileName) const ;
+	void ShowAllPlanes()const ;
+	void ShowAllCrewMembers() const;
+	void ShowAllFlights() const;
 
 };
 

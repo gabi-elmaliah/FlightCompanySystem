@@ -4,6 +4,7 @@ using namespace std;
 #include "CFlight.h"
 #include "CFlightCompany.h"
 #include "FlightCompException.h"
+#include "PlaneCrewFactory.h"
 
 CFlightCompany::CFlightCompany(string name) : name(name)
 {
@@ -25,70 +26,55 @@ CFlightCompany::CFlightCompany(string name) : name(name)
 		planes[i] = nullptr;
 	}
 
+
 	
 }
 
 CFlightCompany::CFlightCompany(string Fname, int) noexcept(false)
 {
-	ifstream inFile(Fname, ios::trunc);
+	ifstream inFile(Fname);
 	if (!inFile)
 		throw CCompFileException(Fname);
-
+	
 	getline(inFile, this->name);
 
 	inFile >> numOfCrewMembers;
 
 	if (numOfCrewMembers > MAX_CREW) {
-		throw CCompLimitException(MAX_CREW);
+		throw CCompStringException("Error in reading from file: number of crew member is bigger than the number allowed");
 	}
 
 	// reading crew members from txt file
 	for (int i = 0; i < numOfCrewMembers; i++)
 	{
-		int type;
-		inFile>> type;
-		if (type == 0)//if host 
-		{
-			crewMembers[i] = new CHost(inFile);
-		}
-		else // pilot
-		{
-			crewMembers[i] = new CPilot(inFile);
-		}		
+		crewMembers[i] = CPlaneCrewFactory::GetCrewMemberFromFile(inFile);
 	}
 
 	inFile >>numOfPlanes;
 
-	if (numOfPlanes > MAX_FLIGHTS  ) {
-		throw CCompLimitException(MAX_FLIGHTS);
+	if (numOfPlanes > MAX_PLANES ) {
+		throw CCompStringException("Error in reading from file: number of planes is bigger than the number allowed");
 	}
 
 	// reading planes from txt file
 	for (int i = 0; i < numOfPlanes; i++)
 	{
-		int type;
-		inFile >> type;
-		if (type == 0)//if regular plane 
-		{
-		//	planes[i] = new CPlane(inFile);
-		}
-		else // cargo
-		{
-			//planes[i] = new CCargo(inFile);
-		}
+		planes[i] = CPlaneCrewFactory::GetPlaneFromFile(inFile);
 	}
 
 	inFile >> numOfFlights;
 
 	// reading flights from txt file
 	if (numOfFlights > MAX_FLIGHTS) {
-		throw CCompLimitException(MAX_FLIGHTS);
+		throw CCompStringException("Error in reading from file: number of flights is bigger than the number allowed");
 	}
 
 	for (int i = 0; i < numOfFlights; i++)
 	{
-		flights[i] = new CFlight(inFile,*this);
+		//flights[i] = new CFlight(inFile,*this);
+		flights[i] = CPlaneCrewFactory::GetFlightFromFile(inFile, *this);
 	}
+	inFile.close();
 }
 
 CFlightCompany::CFlightCompany(CFlightCompany& other)
@@ -102,7 +88,6 @@ CFlightCompany::~CFlightCompany()
 		delete crewMembers[i];
 		crewMembers[i] = nullptr;
 	}
-
 
 	for (int i = 0; i <numOfFlights; i++)
 	{
@@ -121,7 +106,7 @@ CFlightCompany::~CFlightCompany()
 void CFlightCompany::SaveToFile(string fileName) const
 {
 	ofstream outFile(fileName, ios::trunc);
-	outFile << name << "\n" << numOfCrewMembers;
+	outFile << name << endl << numOfCrewMembers<<endl;
 	//writing crew members to file 
 	for (int i = 0; i < numOfCrewMembers; i++)
 	{
@@ -147,13 +132,19 @@ void CFlightCompany::SaveToFile(string fileName) const
 		{
 			CCargo* temp = dynamic_cast<CCargo*>(planes[i]);
 			if (temp)
-				outFile << 1 << " ";
+			{
+				outFile << 1 << " ";  // 1 for Cargo plane
+			}
 			else
-				outFile << 0 << " ";
-			outFile << *planes[i];
-		}
-		else
-			break;
+			{
+				outFile << 0 << " ";  // 0 for Regular plane
+			}
+
+			if (i == 0)
+			{
+				// Only the first plane writes the counter (lastId)
+				outFile << CPlane::getCounter() << " ";
+			}
 	}
 
 	outFile <<numOfFlights << endl;
@@ -195,7 +186,12 @@ ostream& operator<<(ostream& os, const CFlightCompany& p)
 	os << "There are " << p.numOfPlanes << " Planes" << endl;
 	for (int i = 0; i < p.numOfPlanes; i++)
 	{
-		os << *p.planes[i];
+		if (i == 0)
+		{
+			
+			os << *p.planes[i];
+		
+		}
 	}
 
 	os << "There are " << p.numOfFlights << " Flights" << endl;
@@ -259,13 +255,13 @@ const CFlightCompany& CFlightCompany::operator=(const CFlightCompany& p)
 bool CFlightCompany::AddCrewMember(const CCrewMember& p)
 {
 	if (numOfCrewMembers == CFlightCompany::MAX_CREW)
-		return false;
+		throw CCompStringException("Sorry you reach the max amount of crew members");
 
 	//check if already exsist 
 	for (int i = 0; i < numOfCrewMembers; i++)
 	{
 		if (*crewMembers[i] == p)
-			return false;
+			throw CCompStringException("Sorry there is already a crew mebmer with the same name");
 	}
 
 	//crewMembers[numOfCrewMembers] = new CCrewMember(p);
@@ -278,13 +274,13 @@ bool CFlightCompany::AddCrewMember(const CCrewMember& p)
 bool CFlightCompany::AddPlane(const CPlane& p)
 {
 	if (numOfPlanes == CFlightCompany::MAX_PLANES)
-		return false;
+		throw CCompStringException("Sorry you reach the max amount of planes in the flight company,you cant addd more planes");
 
 	//check if already exsist 
 	for (int i = 0; i < numOfPlanes; i++)
 	{
 		if (*planes[i] == p)
-			return false;
+			throw CCompStringException("Sorry there is already a plane with the same number");
 	}
 
 	//planes[numOfPlanes] = new CPlane(p);
@@ -296,25 +292,32 @@ bool CFlightCompany::AddPlane(const CPlane& p)
 bool CFlightCompany::AddFlight(const CFlight& p)
 {
 	if (numOfFlights == CFlightCompany::MAX_FLIGHTS)
-		return false;
+		throw CCompStringException("Sorry you reach the max amount of flight in flight company");
 
 	//check if already exsist 
 	for (int i = 0; i < numOfFlights; i++)
 	{
 		if (*flights[i] == p)
-			return false;
+			throw CCompStringException("Sorry the flight already exsist in the co");
 	}
 
 	flights[numOfFlights] = new CFlight(p.GetFlightInfo(),p.plane); // CFlightCompany is a frind of CFLight
 	numOfFlights++;
 	return true;
 }
+int CFlightCompany::GetCrewCount()const
+{
+	return numOfCrewMembers;
+}
 
 
 CCrewMember* CFlightCompany::GetCrewMember(int index) const
 {
-	if (index<0 || index>numOfCrewMembers)
-		throw CCompLimitException(numOfCrewMembers);
+	if (index<0)
+		throw CCompLimitException(index);
+	if(index >= numOfCrewMembers)
+		throw CCompLimitException(numOfCrewMembers-1);
+
 
 	return crewMembers[index];
 
@@ -339,16 +342,15 @@ CFlight* CFlightCompany::GetFlightByNum(int flightNum) const noexcept(false)
 void  CFlightCompany::AddCrewToFlight(int flightNumber, int index)
 {
 	CFlight* flight = const_cast<CFlight*>(this->GetFlightByNum(flightNumber));
-	CCrewMember* crewMember =const_cast<CCrewMember*>(this->GetCrewMember(index));
+	CCrewMember* crewMember = const_cast<CCrewMember*>(this->GetCrewMember(index));
 	if (flight == nullptr)
 		return;
 	if (crewMember == nullptr)
 		return;
 
 	flight = *flight + crewMember;
-	
-	
 }
+	
 
 
 int  CFlightCompany::GetCargoCount()const
@@ -419,12 +421,12 @@ const CPlane& CFlightCompany::operator[](int index) const   noexcept(false)
 
 CPlane& CFlightCompany::operator[](int index) noexcept(false)
 {
-	if (index<0 || index>numOfPlanes)
-		throw CCompLimitException(numOfPlanes);
+	if (index<0)
+		throw CCompLimitException(index);
+	if(index > numOfPlanes)
+		throw CCompLimitException(numOfPlanes-1);
 
-	if (index>MAX_PLANES)
-		throw CCompLimitException(MAX_PLANES);
-	
+
 	return *planes[index];
 
 }
@@ -439,6 +441,36 @@ const CPlane* CFlightCompany::getPlaneById(int planeNumber) const noexcept(false
 
 	throw CCompStringException("Error in finding a plane with the given Id. Plane doesnt exsist");
 }
+
+void CFlightCompany::ShowAllPlanes() const 
+{
+	for (int i = 0; i < numOfPlanes; i++)
+	{
+		cout << i + 1 << ". ";
+		cout << *planes[i];
+	}
+
+}
+
+void CFlightCompany::ShowAllCrewMembers() const
+{
+	for (int i = 0; i < numOfCrewMembers; i++)
+	{
+		cout << i + 1 << ".";
+		crewMembers[i]->Print(std::cout);
+	}
+}
+
+void CFlightCompany::ShowAllFlights() const
+{
+	for (int i = 0; i <numOfFlights; i++)
+	{
+		cout << flights[i]->GetFlightInfo(); // want to show only the flight when the user add crew member to flight 
+	}
+
+}
+
+
 
 
 

@@ -5,6 +5,7 @@ CCargo::CCargo(int seats, string name, float maxWeight, float maxVolume) noexcep
 {
 	if (maxWeight < 0)
 	{
+
 		throw CCompStringException("error in CCargo C'tor: max weight should be greater than zero\n");
 	}
 	else
@@ -39,10 +40,17 @@ const CCargo& CCargo::operator=(const CCargo& p)
 	return *this;
 }
 
-CCargo::CCargo(ifstream& in):CPlane(in)
+CCargo::CCargo(ifstream& in):CPlane(in,true)
+{
+	fromOs(in);
+}
+
+void CCargo::fromOs(istream& in)
 {
 	in >> maxVolume >> maxWeight >> currentVolume >> currentWeight;
+
 }
+
 
 bool CCargo::Load(float weight, float volume)
 {
@@ -63,7 +71,6 @@ void CCargo::toOs(ostream& os) const
 {
 	if (typeid(os) == typeid(ofstream))
 	{
-		os << serial_number << " " << name << " " << numOfSeats << endl;
 		os << maxVolume << "   " << maxWeight << "  " << currentVolume << " " << currentWeight << endl;
 	}
 	else

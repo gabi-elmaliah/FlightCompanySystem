@@ -25,7 +25,7 @@ public:
 	void comeToSimulatorMessage();
 	virtual const CPilot& operator=(const CPilot& p);
 	virtual bool operator==(const CCrewMember& other) const;
-	const CCrewMember* operator+=(int minutes);
+	const CCrewMember& operator+=(int minutes);
 	virtual CCrewMember* clone()const override { return new CPilot(*this); };
 };
 

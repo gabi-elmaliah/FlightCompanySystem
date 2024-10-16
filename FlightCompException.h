@@ -34,10 +34,17 @@ public:
 class CCompLimitException: public CFlightCompException
 {
 private:
-	int maxAmount;
+	int index;
 public :
-	CCompLimitException(int maxAmount) :maxAmount(maxAmount) {}
-	virtual void Show() const override { cout << "Invalid Index,The maximum index is :"<<maxAmount-1 << endl; }
+	CCompLimitException(int index) :index(index) {}
+	virtual void Show() const override 
+	{
+		if (index < 0)
+			cout << "Invalid Index, Index cant be negative" << endl;
+		else
+			cout << "Invalid index, The max index you have is "<<index-1<< endl;
+			
+	}
 
 };
 

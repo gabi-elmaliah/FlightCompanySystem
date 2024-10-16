@@ -61,7 +61,7 @@ void CFlightInfo::setFlightNumber(int flightNumber) noexcept(false)
 void CFlightInfo::SetDest(string destination) noexcept(false)
 {
 
-	if (destination.length() > 30)
+	if (destination.length() >10)
 		throw CCompStringException("error in the destination:to much characters in destination\n");
 	else
 		this->destination = destination;
@@ -71,7 +71,7 @@ void CFlightInfo::SetDest(string destination) noexcept(false)
 void CFlightInfo::setFlightTimeMinutes(int minutes) noexcept(false)
 {
 	if (minutes < 0)
-		throw CCompStringException("error in flight info: negative");
+		throw CCompStringException("error in flight info: minutes cant be negative");
 	else
 		this->flightTimeMinutes = flightTimeMinutes;
 
@@ -79,7 +79,7 @@ void CFlightInfo::setFlightTimeMinutes(int minutes) noexcept(false)
 void CFlightInfo::setFlightDistance(int distance)
 {
 	if (distance < 0)
-		throw CCompStringException("error in flight info C'tor: negative distance");
+		throw CCompStringException("error in flight info: negative distance");
 	else
 		this->flightDistance =distance;
 

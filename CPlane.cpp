@@ -2,17 +2,19 @@
 #include <string>
 #include "CPlane.h"
 #include "FlightCompException.h"
+#include "PlaneCrewFactory.h"
+
 using namespace std;
 
 int CPlane::counter = 100;
 
-CPlane::CPlane(int numOfSeats, const string& name) noexcept(false) :name(name), serial_number(counter++) 
+CPlane::CPlane(int numOfSeats, const string& name) noexcept(false) :name(name)
 {
 	if (numOfSeats <= 0)
 		throw CCompStringException("error in CPlane: number of seats must be positive");
 	else
 		this->numOfSeats = numOfSeats;
-
+	serial_number = counter++;
 }
 
 
@@ -22,16 +24,37 @@ CPlane::CPlane(const CPlane& other)
 	*this = other;
 }
 
-CPlane::CPlane(ifstream &in)
+CPlane::CPlane(ifstream& in, bool isCargo)  // Pass a flag to indicate whether it's a Cargo plane
+{
+	if (!isCargo)
+	{
+		int lastId;
+		in >> lastId;
+		CPlane::counter = lastId;  // Only read lastId if it's a regular plane
+	}
+
+	// Read the rest of the data common to all planes
+	in >> serial_number >> name >> numOfSeats;
+}
+
+istream& operator>>(istream& in, CPlane& p)
+{
+	p.fromOs(in);
+	return in;
+}
+
+void CPlane::fromOs(istream& in)
 {
 	int lastId;
-	in >> lastId>>serial_number>>name>>numOfSeats;
-	
+	in >> lastId >>serial_number >> name >> numOfSeats;
+	// Increment counter for the next ID
+	CPlane::counter = lastId;
+	cout << "regular planer" << endl;
+
 }
-CPlane::~CPlane()
-{
-	
-}
+
+
+
 
 int CPlane::getSerialNumber() const
 {
@@ -61,10 +84,11 @@ ostream& operator<<(ostream& os, const CPlane& p)
 {
 	if (typeid(os) == typeid(ofstream))
 	{
-		p.toOs(os);
+		os <<p.serial_number << " " << p.name << "  " << p.numOfSeats << endl;
 	}
 	else
 		os << "Plane " << p.serial_number << " degem " << p.name << " seats " << p.numOfSeats << endl;
+	p.toOs();
 	return os;
 }
 

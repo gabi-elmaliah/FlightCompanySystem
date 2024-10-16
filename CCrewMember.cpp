@@ -78,7 +78,7 @@ ostream& operator<<(ostream& os, const CCrewMember& p)
 {
 	if (typeid(os) == typeid(ofstream))
 	{
-		os << p.name <<" "<< p.airTimeMinutes;
+		os << p.name <<" "<< p.airTimeMinutes<<" ";
 	}
 	else
 		os << "Crewmember " << p.name << " minutes " << p.airTimeMinutes << endl;
@@ -94,13 +94,13 @@ istream& operator>>(istream& in,CCrewMember& p)
 	return in;
 }
 
-const CCrewMember* CCrewMember::operator+=(int minutes)
+const CCrewMember& CCrewMember::operator+=(int minutes)
 {
 	if (minutes < 0)
-		throw CCompStringException("can add amount of minutes that is positive\n");
+		throw CCompStringException("Error in adding minutes to Crew member: cant add amount of minutes that is negative\n");
 
 	this->airTimeMinutes += minutes;
-	return this;
+	return *this;
 }
 
 

@@ -45,7 +45,7 @@ public:
 	friend ostream& operator<<(ostream& os, const CFlight& p);
 	const CFlight& operator=(const CFlight& p);
 	bool operator==(const CFlight& p) const;
-	CFlight* operator+(const CCrewMember* other);
+	CFlight* operator+(const CCrewMember* other) noexcept(false);
 
 	bool TakeOff()  noexcept(false);
 	int countPilots()const ;
