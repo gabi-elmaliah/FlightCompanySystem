@@ -35,6 +35,7 @@ void main()
 	catch (const CFlightCompException& e) {
 		e.Show();
 		pDelta = new CFlightCompany("Delta");
+		CPlaneCrewFactory::GetCompanyDataFromUser(*pDelta);
 	}
 	
 
@@ -42,107 +43,23 @@ void main()
 	try
 	{
 		CPlane p1(-34, "AirBus");
-	}
-	catch (const CFlightCompException& e) {
-		e.Show();
-	}
-	try
-	{
 		CCargo c1(45, "Jumbo", -560, 200);
-	}
-
-	catch (const CFlightCompException& e) {
-		e.Show();
-	}
-	cout << "3.counter is: " << CPlane::getCounter() << endl;
-
-	try
-	{
 		CCargo c2(45, "Jumbo", 560, -200);
-	}
-	catch (const CFlightCompException& e) {
-		e.Show();
-	}
-
-
-	try
-	{
 		CFlightInfo f1("London", -23, 120, 5000);
-	}
-	catch (const CFlightCompException& e) {
-		e.Show();
-	}
-
-	try
-	{
 		CFlightInfo f2("LondonVeryLong", 23, 120, 5000);
-	}
-	catch (const CFlightCompException& e) {
-		e.Show();
-	}
-
-	try
-	{
 		CFlightInfo f3("London", 23, -120, 5000);
-	}
-	catch (const CFlightCompException& e) {
-		e.Show();
-	}
-
-	try
-	{
 		CFlightInfo f4("London", 23, 120, -5000);
-	}
-	catch (const CFlightCompException& e) {
-		e.Show();
-	}
-
-	try
-	{
 		CCrewMember* pC1 = pDelta->GetCrewMember(-1);
-	}
-	catch (const CFlightCompException& e) {
-		e.Show();
-	}
 
-	CCrewMember* pC2 = pDelta->GetCrewMember(0);
-
-	
-	try
-	{
+		CCrewMember* pC2 = pDelta->GetCrewMember(0);
 		(*pC2) += -4;
-	}
-	catch (const CFlightCompException& e) {
-		e.Show();
-	}
-
-	try
-	{
 		CPlane p0 = (*pDelta)[9];
 	}
 	catch (const CFlightCompException& e) {
 		e.Show();
+	
 	}
 
-	cout << "------------checking get company from user------------------" << endl;
-	CPlaneCrewFactory::GetCompanyDataFromUser(*pDelta);
-
-
-	CFlight* pF = pDelta->GetFlightByNum(343);
-	CCrewMember* pCmTemp;
-	if (pF != NULL) {
-		cout << "flight 343 was found " << endl;
-		for (int i = 0; i < pDelta->GetCrewCount(); i++) {
-			try
-			{
-				pCmTemp = pDelta->GetCrewMember(i);
-				*pF + pCmTemp;  // Try adding the crew member to the flight
-			}
-			catch (CFlightCompException& ex) {
-				ex.Show();
-			}
-		}
-	}
 
 
 	try

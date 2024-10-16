@@ -73,7 +73,7 @@ void CFlightInfo::setFlightTimeMinutes(int minutes) noexcept(false)
 	if (minutes < 0)
 		throw CCompStringException("error in flight info: minutes cant be negative");
 	else
-		this->flightTimeMinutes = flightTimeMinutes;
+		this->flightTimeMinutes =minutes;
 
 }
 void CFlightInfo::setFlightDistance(int distance)

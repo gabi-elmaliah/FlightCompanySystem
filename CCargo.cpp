@@ -5,7 +5,7 @@ CCargo::CCargo(int seats, string name, float maxWeight, float maxVolume) noexcep
 {
 	if (maxWeight < 0)
 	{
-
+		counter--;//because the CPlane constructor add one do counter  so in case there is an exeption we wont create a plane 
 		throw CCompStringException("error in CCargo C'tor: max weight should be greater than zero\n");
 	}
 	else
@@ -13,6 +13,7 @@ CCargo::CCargo(int seats, string name, float maxWeight, float maxVolume) noexcep
 
 	if (maxVolume < 0)
 	{
+		counter--;//same reason 
 		throw CCompStringException("error in CCargo C'tor: max volume should be greater than zero\n");
 	}
 	else
@@ -40,7 +41,7 @@ const CCargo& CCargo::operator=(const CCargo& p)
 	return *this;
 }
 
-CCargo::CCargo(ifstream& in):CPlane(in,true)
+CCargo::CCargo(ifstream& in):CPlane(in)
 {
 	fromOs(in);
 }
@@ -48,7 +49,6 @@ CCargo::CCargo(ifstream& in):CPlane(in,true)
 void CCargo::fromOs(istream& in)
 {
 	in >> maxVolume >> maxWeight >> currentVolume >> currentWeight;
-
 }
 
 

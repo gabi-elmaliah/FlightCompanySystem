@@ -15,6 +15,7 @@ CPlane::CPlane(int numOfSeats, const string& name) noexcept(false) :name(name)
 	else
 		this->numOfSeats = numOfSeats;
 	serial_number = counter++;
+	cout << "value of counter is" << counter;
 }
 
 
@@ -24,33 +25,16 @@ CPlane::CPlane(const CPlane& other)
 	*this = other;
 }
 
-CPlane::CPlane(ifstream& in, bool isCargo)  // Pass a flag to indicate whether it's a Cargo plane
+CPlane::CPlane(ifstream& in)  // Pass a flag to indicate whether it's a Cargo plane
 {
-	if (!isCargo)
-	{
-		int lastId;
-		in >> lastId;
-		CPlane::counter = lastId;  // Only read lastId if it's a regular plane
-	}
-
-	// Read the rest of the data common to all planes
-	in >> serial_number >> name >> numOfSeats;
+	in >> *this;
 }
 
 istream& operator>>(istream& in, CPlane& p)
 {
+	in>> p.serial_number >> p.name >> p.numOfSeats;
 	p.fromOs(in);
 	return in;
-}
-
-void CPlane::fromOs(istream& in)
-{
-	int lastId;
-	in >> lastId >>serial_number >> name >> numOfSeats;
-	// Increment counter for the next ID
-	CPlane::counter = lastId;
-	cout << "regular planer" << endl;
-
 }
 
 
@@ -88,7 +72,7 @@ ostream& operator<<(ostream& os, const CPlane& p)
 	}
 	else
 		os << "Plane " << p.serial_number << " degem " << p.name << " seats " << p.numOfSeats << endl;
-	p.toOs();
+	p.toOs(os);
 	return os;
 }
 

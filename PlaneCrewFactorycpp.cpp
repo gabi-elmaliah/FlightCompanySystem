@@ -27,7 +27,7 @@ void CPlaneCrewFactory::GetCompanyDataFromUser(CFlightCompany& comp)
 	int option;
 	while (true)
 	{
-		cout << "You have 2 options (please enter the option number): " << endl;
+		cout << "You have 7  options (please enter the option number): " << endl;
 		cout << "1. Add plane to company " << endl;
 		cout << "2. Add CrewMember to company " << endl;
 		cout << "3. Add  plane to flight" << endl;
@@ -109,6 +109,7 @@ CPlane* CPlaneCrewFactory::GetPlaneFromUser()
 	if (planeType < 1 || planeType > nofPlaneType)
 		throw WrongOptionException(planeType);
 
+
 	
 
 	cout << "Enter the the name of the plane ";
@@ -165,7 +166,8 @@ CCrewMember* CPlaneCrewFactory::GetCrewFromUser()
 
 		return new CHost(name, static_cast<CHost::eType>(hostType), airTimeMinutes);
 	}
-	else if (crewType == ePilot) {
+	else if (crewType == ePilot)
+	{
 		// Get additional information for Pilot
 		int isCaptain;
 		cout << "Is the pilot a captain? (0 for No, 1 for Yes): ";
@@ -205,6 +207,45 @@ CCrewMember* CPlaneCrewFactory::GetCrewFromUser()
 	return nullptr;  // This line should not be reached, provided the input validation works
 }
 
+
+CPilot* CPlaneCrewFactory::getPilotFromUser()
+{
+	// Get additional information for Pilot
+	int isCaptain;
+	cout << "Is the pilot a captain? (0 for No, 1 for Yes): ";
+	cin >> isCaptain;
+	// Validate the host type
+	if (isCaptain < 0 || isCaptain >1) {
+		throw WrongOptionException(isCaptain);
+	}
+
+	// Handle the address (optional)
+	char hasAddress;
+	cout << "Does the pilot have an address? (y/n): ";
+	cin >> hasAddress;
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+	if (hasAddress != 'y' && hasAddress != 'Y' && hasAddress != 'n' && hasAddress != 'N')
+		throw CCompStringException("Invalid input. Please enter 'y' or 'n'.");
+
+	CAddress* address = nullptr;
+	if (hasAddress == 'y' || hasAddress == 'Y') {
+		int houseNumber;
+		string streetName, cityName;
+		cout << "Enter house number: ";
+		cin >> houseNumber;
+		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+		cout << "Enter street name: ";
+		getline(cin, streetName);
+		cout << "Enter city name: ";
+		getline(cin, cityName);
+		address = new CAddress(houseNumber, streetName.c_str(), cityName.c_str());
+	}
+
+	return new CPilot(name, static_cast<bool>(isCaptain), address, airTimeMinutes);
+
+}
 CCrewMember* CPlaneCrewFactory::GetCrewMemberFromFile(ifstream& inFile)
 {
 	int type;
@@ -220,13 +261,12 @@ CCrewMember* CPlaneCrewFactory::GetCrewMemberFromFile(ifstream& inFile)
 	
 }
 
-CPlane* CPlaneCrewFactory::GetPlaneFromFile(ifstream& inFile) 
+CPlane* CPlaneCrewFactory::GetPlaneFromFile(ifstream& inFile,int type) 
 {
-	int type;
-	inFile >> type;
+
 	if (type == 0) //if regular plane 
 	{
-		return new CPlane(inFile, false);
+		return new CPlane(inFile);
 	}
 	else // cargo
 	{

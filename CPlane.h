@@ -16,19 +16,20 @@ public:
 
 	CPlane(int numOfSeats, const string& name) noexcept(false);
 	CPlane(const CPlane& other);
-	CPlane(ifstream &in, bool isCargo);
-	virtual ~CPlane() { counter--; }
+	CPlane(ifstream &in);
+	virtual ~CPlane() { cout << "******d'tor********" << endl;}
 	int getSerialNumber() const;
 	string getName() const;
 	int getNumOfSeats()const;
 	void Print() const;
 	bool IsEqual(const CPlane& other)const;
 	static int getCounter(){ return counter; }//help function to help trach serial_number
+	static void setCounter(int number) { counter=number; }
 
 	friend ostream& operator<<(ostream& os, const CPlane& p);
 	friend istream& operator>>(istream& in, CPlane& p);
-	virtual void fromOs(istream& in);
-	virtual void toOs(ostream& os) const { os << CPlane::counter << " " << serial_number << " " << name << "  " << numOfSeats << endl; };
+	virtual void fromOs(istream& in) {};
+	virtual void toOs(ostream& os) const {  };
 	bool operator==(const CPlane& p) const;
 	virtual const CPlane& operator=(const CPlane& other);
 	virtual CPlane* clone() const { return new CPlane(*this); };

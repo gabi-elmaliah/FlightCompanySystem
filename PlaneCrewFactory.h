@@ -44,9 +44,10 @@ public:
 	static CPlane* GetPlaneFromUser()noexcept(false);
 	static CCrewMember* GetCrewFromUser();
 	static CCrewMember* GetCrewMemberFromFile(ifstream& inFile);
-	static CPlane* GetPlaneFromFile(ifstream& inFile);
+	static CPlane* GetPlaneFromFile(ifstream& inFile, int type);
 	static void AddCrewMemberToFlight(CFlightCompany& comp)noexcept(false);
 	static void AddPlaneToFlight(CFlightCompany& comp);
+	static CPilot* getPilotFromUser(string name, int airTimeMinutes)noexcept(false);
 
 	
 

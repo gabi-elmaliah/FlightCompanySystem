@@ -59,7 +59,19 @@ CFlightCompany::CFlightCompany(string Fname, int) noexcept(false)
 	// reading planes from txt file
 	for (int i = 0; i < numOfPlanes; i++)
 	{
-		planes[i] = CPlaneCrewFactory::GetPlaneFromFile(inFile);
+		
+		int planeType;
+		inFile >> planeType;  // Read the plane type (0 for regular, 1 for cargo)
+
+		if (i == 0) // First plane should read lastId
+		{
+			int lastId;
+			inFile >> lastId;
+			CPlane::setCounter(lastId); // Set the counter for the plane IDs
+		}
+
+		planes[i] = CPlaneCrewFactory::GetPlaneFromFile(inFile, planeType);
+
 	}
 
 	inFile >> numOfFlights;
@@ -145,6 +157,8 @@ void CFlightCompany::SaveToFile(string fileName) const
 				// Only the first plane writes the counter (lastId)
 				outFile << CPlane::getCounter() << " ";
 			}
+			outFile << *planes[i];
+		}
 	}
 
 	outFile <<numOfFlights << endl;
@@ -154,6 +168,7 @@ void CFlightCompany::SaveToFile(string fileName) const
 		outFile << *flights[i];
 	}
 
+	outFile.close();
 
 }
 
@@ -186,12 +201,7 @@ ostream& operator<<(ostream& os, const CFlightCompany& p)
 	os << "There are " << p.numOfPlanes << " Planes" << endl;
 	for (int i = 0; i < p.numOfPlanes; i++)
 	{
-		if (i == 0)
-		{
-			
-			os << *p.planes[i];
-		
-		}
+		os << *p.planes[i];
 	}
 
 	os << "There are " << p.numOfFlights << " Flights" << endl;
