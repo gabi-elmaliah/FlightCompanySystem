@@ -168,47 +168,14 @@ CCrewMember* CPlaneCrewFactory::GetCrewFromUser()
 	}
 	else if (crewType == ePilot)
 	{
-		// Get additional information for Pilot
-		int isCaptain;
-		cout << "Is the pilot a captain? (0 for No, 1 for Yes): ";
-		cin >> isCaptain;
-		// Validate the host type
-		if (isCaptain < 0 || isCaptain >1) {
-			throw WrongOptionException(isCaptain);
-		}
-
-		// Handle the address (optional)
-		char hasAddress;
-		cout << "Does the pilot have an address? (y/n): ";
-		cin >> hasAddress;
-		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-		if (hasAddress != 'y' && hasAddress != 'Y' && hasAddress != 'n' && hasAddress != 'N')
-			throw CCompStringException("Invalid input. Please enter 'y' or 'n'.");
-
-		CAddress* address = nullptr;
-		if (hasAddress == 'y' || hasAddress == 'Y') {
-			int houseNumber;
-			string streetName, cityName;
-			cout << "Enter house number: ";
-			cin >> houseNumber;
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-			cout << "Enter street name: ";
-			getline(cin, streetName);
-			cout << "Enter city name: ";
-			getline(cin, cityName);
-			address = new CAddress(houseNumber, streetName.c_str(), cityName.c_str());
-		}
-
-		return new CPilot(name, static_cast<bool>(isCaptain), address, airTimeMinutes);
+		CPilot* pilot = getPilotFromUser(name,airTimeMinutes);
+		return pilot;
 	}
-
 	return nullptr;  // This line should not be reached, provided the input validation works
 }
 
 
-CPilot* CPlaneCrewFactory::getPilotFromUser()
+CPilot* CPlaneCrewFactory::getPilotFromUser(string name,int airTimeMinutes)
 {
 	// Get additional information for Pilot
 	int isCaptain;

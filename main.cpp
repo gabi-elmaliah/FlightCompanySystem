@@ -26,7 +26,7 @@ void main()
 	try
 	{
 
-		pDelta = new CFlightCompany("Delta.txt", 0);
+		pDelta = new CFlightCompany("shalom.txt", 0);
 		cout << "This was in file " << endl;
 		pDelta->Print(cout);
 
