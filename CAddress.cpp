@@ -35,8 +35,8 @@ CAddress::CAddress(const CAddress& other)
 
 CAddress::~CAddress()
 {
-	delete[] cityName;
-	delete[] streetName;
+	free (cityName);
+	free( streetName);
 	cityName = nullptr;
 	streetName = nullptr;
 }
@@ -83,8 +83,8 @@ void CAddress::UpdateAddress(const char* cityName, const char* streetName,int ho
 	}
 	else
 		this->houseNumber = houseNumber;
-	delete[] this->cityName;
-	delete[] this->streetName;
+	free(this->cityName);
+	free(this->streetName);
 	this->cityName = _strdup(cityName);
 	this->streetName = _strdup(streetName);
 
@@ -113,8 +113,8 @@ istream& operator>>(istream& in, CAddress& p)
 	 in >> p.houseNumber>>tempStreet>>tempCity;
 
 	 // Deallocate previous memory and allocate new memory for the input strings
-	 delete[] p.cityName;
-	 delete[] p.streetName;
+	 free(p.cityName);
+	 free( p.streetName);
 	 p.cityName, p.streetName = nullptr;
 
 	 p.cityName = _strdup(tempCity);
@@ -140,8 +140,8 @@ const CAddress& CAddress::operator=(const CAddress& other)
 	if (this!=&other)
 	{
 		this->houseNumber = other.houseNumber;
-		delete[]this->cityName;
-		delete[]this->streetName;
+		free(this->cityName);
+		free(this->streetName);
 		this->cityName = _strdup(other.cityName);
 		this->streetName = _strdup(other.streetName);
 	}

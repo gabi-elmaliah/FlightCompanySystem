@@ -19,7 +19,7 @@ public :
 	//constructors
 	CFlightInfo(const  string& destination,int flightNumber, int flightTimeMinutes, int flightDistance) noexcept(false);
 	CFlightInfo(ifstream& in);
-	~CFlightInfo();
+	virtual ~CFlightInfo();
 	CFlightInfo(const CFlightInfo & other);
 
 	//getters

@@ -17,7 +17,7 @@ public:
 	CPlane(int numOfSeats, const string& name) noexcept(false);
 	CPlane(const CPlane& other);
 	CPlane(ifstream &in);
-	virtual ~CPlane() { cout << "******d'tor********" << endl;}
+	virtual ~CPlane() {}
 	int getSerialNumber() const;
 	string getName() const;
 	int getNumOfSeats()const;

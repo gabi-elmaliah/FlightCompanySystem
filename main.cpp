@@ -8,7 +8,7 @@ using namespace std;
 #include "CCrewMember.h"
 #include "CFlight.h"
 #include "CFlightCompany.h"
-#include "Caddress.h"
+#include "CAddress.h"
 #include "CPilot.h"
 #include "CCargo.h"
 #include "CHost.h"
@@ -26,7 +26,7 @@ void main()
 	try
 	{
 
-		pDelta = new CFlightCompany("shalom.txt", 0);
+		pDelta = new CFlightCompany("Delta.txt", 0);
 		cout << "This was in file " << endl;
 		pDelta->Print(cout);
 

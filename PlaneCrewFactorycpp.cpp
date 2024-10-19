@@ -105,18 +105,22 @@ CPlane* CPlaneCrewFactory::GetPlaneFromUser()
 	cout << "1.Regular Plane " << endl;
 	cout << "2.Cargo Plane " << endl;
 	cin >> planeType;
+	
+	checkCin();
 
-	if (planeType < 1 || planeType > nofPlaneType)
+	if (planeType < 1 || planeType >2 )
 		throw WrongOptionException(planeType);
 
 
 	
-
 	cout << "Enter the the name of the plane ";
 	cin >> degem;
+	checkCin();
 
 	cout << "Enter the number of seats in the plane ";
 	cin >> numOfSeats;
+	checkCin();
+	
 	
 	if (planeType - 1 == eRegular)
 	{
@@ -127,8 +131,10 @@ CPlane* CPlaneCrewFactory::GetPlaneFromUser()
 		float maxWeight, maxVolume;
 		cout << "Enter max weight: ";
 		cin >> maxWeight;
+		checkCin();
 		cout << "Enter max volume: ";
 		cin >> maxVolume;
+		checkCin();
 		return new CCargo(numOfSeats, degem, maxWeight, maxVolume);
 	}
 }
@@ -138,6 +144,7 @@ CCrewMember* CPlaneCrewFactory::GetCrewFromUser()
 	int crewType;
 	cout << "Enter crew member type (0 for Host, 1 for Pilot): ";
 	cin >> crewType;
+	checkCin();
 
 	// Check for valid input and handle invalid choices
 	if (crewType < 0 || crewType >= nofCrewType) {
@@ -152,12 +159,15 @@ CCrewMember* CPlaneCrewFactory::GetCrewFromUser()
 	int airTimeMinutes;
 	cout << "Enter the air time in minutes: ";
 	cin >> airTimeMinutes;
+	checkCin();
 
 	if (crewType == eHost) {
 		// Get additional information for Host
 		int hostType;
 		cout << "Enter host type (0 for Regular, 1 for Super, 2 for Calcelan): ";
 		cin >> hostType;
+		checkCin();
+		
 
 		// Validate the host type
 		if (hostType < 0 || hostType >= 3) {
@@ -181,6 +191,7 @@ CPilot* CPlaneCrewFactory::getPilotFromUser(string name,int airTimeMinutes)
 	int isCaptain;
 	cout << "Is the pilot a captain? (0 for No, 1 for Yes): ";
 	cin >> isCaptain;
+	checkCin();
 	// Validate the host type
 	if (isCaptain < 0 || isCaptain >1) {
 		throw WrongOptionException(isCaptain);
@@ -190,6 +201,7 @@ CPilot* CPlaneCrewFactory::getPilotFromUser(string name,int airTimeMinutes)
 	char hasAddress;
 	cout << "Does the pilot have an address? (y/n): ";
 	cin >> hasAddress;
+
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 	if (hasAddress != 'y' && hasAddress != 'Y' && hasAddress != 'n' && hasAddress != 'N')
@@ -204,9 +216,9 @@ CPilot* CPlaneCrewFactory::getPilotFromUser(string name,int airTimeMinutes)
 		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 		cout << "Enter street name: ";
-		getline(cin, streetName);
+		cin>> streetName;
 		cout << "Enter city name: ";
-		getline(cin, cityName);
+		cin>>cityName;
 		address = new CAddress(houseNumber, streetName.c_str(), cityName.c_str());
 	}
 
@@ -252,15 +264,18 @@ CFlight* CPlaneCrewFactory::GetFlightFromUser()// not neccecary
 
 	cout << "Enter flight destination: ";
 	cin >> destination;
+	checkCin();
 
 	cout << "Enter flight number: ";
 	cin >> flightNumber;
+	checkCin();
 
 	cout << "Enter flight time in minutes: ";
 	cin >> flightTimeMinutes;
 
 	cout << "Enter flight distance: ";
 	cin >> flightDistance;
+	checkCin();
 
 	// Create the CFlightInfo object
 	CFlightInfo flightInfo(destination, flightNumber, flightTimeMinutes, flightDistance);
@@ -279,6 +294,7 @@ void CPlaneCrewFactory::AddCrewMemberToFlight(CFlightCompany& comp) noexcept(fal
 	int flightNumber;
 	cout << "Enter the flight number to add crew members: ";
 	cin >> flightNumber;
+	checkCin();
 
 	CFlight* flight = comp.GetFlightByNum(flightNumber);  // Fetch the flight
 	if (flight == nullptr) {
@@ -292,6 +308,7 @@ void CPlaneCrewFactory::AddCrewMemberToFlight(CFlightCompany& comp) noexcept(fal
 	int crewMemberIndex;
 	cout << "Enter the crew member number to add:(1,2,3...) ";
 	cin >> crewMemberIndex;
+	checkCin();
 	CCrewMember* crewMember = comp.GetCrewMember(crewMemberIndex -1);  // Fetch the crew member(index start from 0)
 	comp.AddCrewToFlight(flightNumber, crewMemberIndex-1);
 		
@@ -309,6 +326,7 @@ void CPlaneCrewFactory::AddPlaneToFlight(CFlightCompany& comp)
 	int flightNumber;
 	cout << "Enter the flight number to assign a plane: ";
 	cin >> flightNumber;
+	checkCin();
 
 	// Fetch the flight
 	CFlight* flight = comp.GetFlightByNum(flightNumber);
@@ -337,7 +355,8 @@ void CPlaneCrewFactory::AddPlaneToFlight(CFlightCompany& comp)
 	int planeIndex;
 	cout << "Enter the plane number to assign to the flight: (1, 2, 3...) ";
 	cin >> planeIndex;
-	CPlane plane = comp[planeIndex-1];
+	checkCin();
+;	CPlane plane = comp[planeIndex-1];
 	// Step 5: Assign the selected plane to the flight
 	flight->SetPlane(&plane);
 	cout << "Plane successfully assigned to flight!" << endl;
@@ -347,6 +366,21 @@ void CPlaneCrewFactory::AddPlaneToFlight(CFlightCompany& comp)
 CFlight* CPlaneCrewFactory::GetFlightFromFile(ifstream& inFile, CFlightCompany& comp)
 {
 	return new CFlight(inFile, comp);
+}
+
+void ignoreLine()
+{
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+void checkCin()
+{
+	if (!std::cin)
+	{
+		cin.clear();
+		ignoreLine();
+		throw CCompStringException("invalid input");
+	}
 }
 
 

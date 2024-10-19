@@ -338,7 +338,7 @@ CFlight* CFlightCompany::GetFlightByNum(int flightNum) const noexcept(false)
 	if (flightNum <= 0)
 		throw CCompStringException("error in finding flight: flight number must be greater than zero");
  	
-	for (int i = 0; i < numOfCrewMembers; i++)
+	for (int i = 0; i < numOfFlights; i++)
 	{
 
 		if (flights[i]->getFlightNumber() == flightNum)

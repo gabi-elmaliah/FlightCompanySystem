@@ -15,7 +15,6 @@ CPlane::CPlane(int numOfSeats, const string& name) noexcept(false) :name(name)
 	else
 		this->numOfSeats = numOfSeats;
 	serial_number = counter++;
-	cout << "value of counter is" << counter;
 }
 
 
@@ -25,7 +24,7 @@ CPlane::CPlane(const CPlane& other)
 	*this = other;
 }
 
-CPlane::CPlane(ifstream& in)  // Pass a flag to indicate whether it's a Cargo plane
+CPlane::CPlane(ifstream& in) 
 {
 	in >> *this;
 }

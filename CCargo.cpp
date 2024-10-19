@@ -13,7 +13,7 @@ CCargo::CCargo(int seats, string name, float maxWeight, float maxVolume) noexcep
 
 	if (maxVolume < 0)
 	{
-		counter--;//same reason 
+		counter--; //because the CPlane constructor add one do counter  so in case there is an exeption we wont create a plane 
 		throw CCompStringException("error in CCargo C'tor: max volume should be greater than zero\n");
 	}
 	else

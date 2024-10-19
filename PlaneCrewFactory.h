@@ -32,6 +32,9 @@ class CHost;
 class CPilot;
 class CFlight;
 
+void ignoreLine(); // clears input buffer
+void checkCin();
+
 class CPlaneCrewFactory
 {
 public:
@@ -48,9 +51,7 @@ public:
 	static void AddCrewMemberToFlight(CFlightCompany& comp)noexcept(false);
 	static void AddPlaneToFlight(CFlightCompany& comp);
 	static CPilot* getPilotFromUser(string name, int airTimeMinutes)noexcept(false);
-
 	
-
 
 private:
 	CPlaneCrewFactory(void) { }

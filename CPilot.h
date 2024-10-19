@@ -15,7 +15,7 @@ public:
 	CPilot(string name, bool isCaptain, const CAddress* address =nullptr, int airTimeMinutes = 0);
 	CPilot(const CPilot& other);
 	CPilot(ifstream& in);
-	~CPilot();
+	virtual ~CPilot();
 
 	virtual void Print(std::ostream& os)const override;
 	virtual void fromOs(istream& in) override;
