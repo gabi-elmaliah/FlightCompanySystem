@@ -26,7 +26,6 @@ CFlightCompany::CFlightCompany(string name) : name(name)
 		planes[i] = nullptr;
 	}
 
-
 	
 }
 
@@ -36,7 +35,7 @@ CFlightCompany::CFlightCompany(string Fname, int) noexcept(false)
 	if (!inFile)
 		throw CCompFileException(Fname);
 	
-	getline(inFile, this->name);
+	getline(inFile,this->name);
 
 	inFile >> numOfCrewMembers;
 

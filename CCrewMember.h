@@ -17,7 +17,6 @@ public :
 	CCrewMember(string name, int airTimeMinutes = 0) noexcept(false);
 	CCrewMember(ifstream& in);
 	CCrewMember(const CCrewMember & other);
-
 	virtual ~CCrewMember();
 
 	//geters

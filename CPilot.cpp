@@ -36,6 +36,8 @@ void CPilot::fromOs(istream& in)
 	{
 		this->address = new CAddress(in);
 	}
+	else
+		this->address = nullptr;
 	int isCaptain;
 	in >> isCaptain;
 	if (isCaptain)
@@ -126,7 +128,9 @@ void CPilot::toOs(ostream& os) const
 	if (typeid(os) == typeid(ofstream))
 	{
 		if (address != nullptr)
-			os << 1 << " " << *address<<" ";
+			os << 1 << " " << *address << " ";
+		else
+			os << 0 << " ";
 		os << isCaptain<<endl;
 	}
 	else

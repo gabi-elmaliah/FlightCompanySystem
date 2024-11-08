@@ -25,11 +25,9 @@ void main()
 	CFlightCompany* pDelta = NULL;
 	try
 	{
-
 		pDelta = new CFlightCompany("Delta.txt", 0);
 		cout << "This was in file " << endl;
 		pDelta->Print(cout);
-
 	}
 
 	catch (const CFlightCompException& e) {

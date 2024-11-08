@@ -150,7 +150,6 @@ CCrewMember* CPlaneCrewFactory::GetCrewFromUser()
 	if (crewType < 0 || crewType >= nofCrewType) {
 		throw WrongOptionException(crewType);
 	}
-
 	// Collect common data
 	string name;
 	cout << "Enter the crew member's name: ";
