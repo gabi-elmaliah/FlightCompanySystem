@@ -28,11 +28,15 @@ void main()
 		pDelta = new CFlightCompany("Delta.txt", 0);
 		cout << "This was in file " << endl;
 		pDelta->Print(cout);
-	}
+
+	} 
 
 	catch (const CFlightCompException& e) {
 		e.Show();
-		pDelta = new CFlightCompany("Delta");
+		string compName;
+		cout << "Enter the name of the company" << endl;
+		getline(cin, compName);
+		pDelta = new CFlightCompany(compName);
 		CPlaneCrewFactory::GetCompanyDataFromUser(*pDelta);
 	}
 	
@@ -55,8 +59,43 @@ void main()
 	}
 	catch (const CFlightCompException& e) {
 		e.Show();
-	
 	}
+
+
+	//call a static function that get plane or customer from user.
+	CPlaneCrewFactory::GetCompanyDataFromUser(*pDelta);
+
+	CFlightInfo Info("Paris", 343, 320, 5000);
+	CFlight flight1(Info, &(*pDelta)[0]);
+	try
+	{
+		pDelta->AddFlight(flight1);
+	}
+
+	catch (const CFlightCompException& e) {
+		e.Show();
+	}
+
+
+
+	CFlight* pF = pDelta->GetFlightByNum(343);
+	CCrewMember* pCmTemp;
+	if (pF != NULL) {
+		cout << "flight 343 was found " << endl;
+		for (int i = 0; i < pDelta->GetCrewCount(); i++) {
+			pCmTemp = pDelta->GetCrewMember(i);
+			try
+			{
+				*pF + pCmTemp;
+			}
+			catch (const CFlightCompException& e) {
+				e.Show();
+			}
+		}
+	}
+
+
+
 
 
 
