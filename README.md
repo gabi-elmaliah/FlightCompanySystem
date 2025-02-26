@@ -18,3 +18,14 @@ A comprehensive flight management system developed in C++ for handling flight co
 
 When you run the program, it attempts to **load data from `Delta.txt`**.  
 If the file is missing, it prompts the user to **enter flight company details manually**.
+
+### **2. Add New Plane**
+
+```cpp
+CPlane newPlane(150, "Boeing 737");
+flightCompany.AddPlane(newPlane);
+```
+
+
+
+
