@@ -26,6 +26,27 @@ CPlane newPlane(150, "Boeing 737");
 flightCompany.AddPlane(newPlane);
 ```
 
+### **3. Assign a Crew Member to a Flight**
+
+```cpp
+CPilot pilot("John Doe", true, nullptr, 5000);
+flightCompany.AddCrewMember(pilot)
+```
+
+### **4. Take Off a Flight**
+
+```cpp
+bool success = flightCompany.TakeOff(flightNumber);
+if (success) {
+    cout << "Flight took off successfully!" << endl;
+} else {
+    cout << "Failed to take off." << endl;
+}
+```
+
+
+
+
 
 
 
